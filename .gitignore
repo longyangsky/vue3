@@ -1,4 +1,3 @@
-nodeAPI/node_modules/
 nodeAPI/config/
+nodeAPI/node_modules/
 *.tar
-
