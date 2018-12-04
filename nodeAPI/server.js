@@ -4,11 +4,22 @@ const mongoose = require('mongoose')
 const keys = require('./config/keys')
 //创建接口文档
 const swaggerUi = require('swagger-ui-express'); 
-var options = {
-  };
+ 
 
 const swaggerDocument = require('./routes/swagger.json');
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument,options));
+const options={
+    swaggerOptions: {
+        Authorize : false 
+      },
+      customCss: '.swagger-ui .topbar { display: none }'
+}
+//swaggerUi.setup(swaggerDocument,options)
+app.use('/api-docs', swaggerUi.serve,  function(req, res) {
+    swaggerDocument.host = req.get('host'); // Replace hardcoded host information in Swagger file
+    swaggerDocument.schemes = [req.protocol]; // Replace hardcoded protocol information in Swagger file
+    swaggerUi.setup(swaggerDocument,options)(req, res);
+  });
+  
 
 const port = process.env.PORT || 9000;
 
