@@ -2,6 +2,14 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose')
 const keys = require('./config/keys')
+//创建接口文档
+const swaggerUi = require('swagger-ui-express'); 
+var options = {
+  };
+
+const swaggerDocument = require('./routes/swagger.json');
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument,options));
+
 const port = process.env.PORT || 9000;
 
 mongoose.connect(keys.mongoURI,{ useNewUrlParser: true }).then(()=>{

@@ -13,6 +13,8 @@
     "bcrypt": "^3.0.2",
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
-    "mongoose": "^5.3.14"
+    "mongoose": "^5.3.14",
+    "swagger-jsdoc": "^3.2.6",
+    "swagger-ui-express": "^4.0.1"
   }
 }
