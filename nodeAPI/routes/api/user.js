@@ -4,6 +4,8 @@ const User = require('../../models/User');
 const bcrypt= require("bcrypt");
 const jwt = require("jsonwebtoken");
 const passport = require("passport"); 
+//验证
+const validatorRegisterInput =require("../../validator/register");
 /*const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('../../routes/swagger.json');
 
@@ -14,7 +16,11 @@ router.post("/register",(req,res)=>{
     User.findOne({email:req.body.email}).then(user=>{  
         if(user){ 
             return res.status(400).json({err:"已被注册"});
-        }else{
+        }else{ 
+            const{errors,isValid} =validatorRegisterInput(req.body);
+           if(!isValid){
+                return res.json(errors);
+            }
             const newUser = new User({
                 name:req.body.name, 
                 password:req.body.password,
