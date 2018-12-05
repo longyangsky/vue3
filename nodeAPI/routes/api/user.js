@@ -2,6 +2,8 @@ const  express = require("express");
 const router = express.Router();
 const User = require('../../models/User');
 const bcrypt= require("bcrypt");
+const jwt = require("jsonwebtoken");
+const passport = require("passport"); 
 /*const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('../../routes/swagger.json');
 
@@ -35,6 +37,7 @@ router.post("/register",(req,res)=>{
     }) 
 })
 
+
 router.post("/login",(req,res)=>{
     const  email = req.body.email;
     const password = req.body.password;  
@@ -46,14 +49,40 @@ router.post("/login",(req,res)=>{
         }else{ 
             bcrypt.compare(password, user.password)
             .then(ismatch=>{ 
-                    if(ismatch){
-                        res.json('匹配正确');
+                    if(ismatch){ 
+                        const rule={
+                            id:user.id,
+                            name:user.name,
+                            identity:user.identity
+                        } 
+                        jwt.sign(rule,"jiamima", { expiresIn: 60 * 60 },(err,token)=>{
+                            if(err){
+                                res.json({success:false,msg:'生成token错误'})
+                            }else{
+                                res.json({
+                                    success:true,
+                                    msg:'访问正确',
+                                    //因为passport-jwt加密的前面带有bearer
+                                    token:`bearer ${token}`
+                                }) 
+                            }
+                        })
                     }else{
-                        res.json('密码错误');
+                        res.json({success:false,msg:'密码错误'});
                     }
             })
         }
     })
+})
+
+
+router.get('/current',passport.authenticate("jwt",{session:false}),(req,res)=>{
+    res.json({
+        id:req.user.id,
+        name:req.user.name,
+        email:req.user.email,
+        identity:req.user.identity
+    }); 
 })
 
 module.exports = router;

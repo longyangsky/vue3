@@ -17,6 +17,10 @@ const UserSchema = new Schema({
         type:String,
         required:true
     },
+    identity:{
+        type:String,
+        required:true
+    },
     createdate:{
         type:Date,
         default:Date.now
